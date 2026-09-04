@@ -3,79 +3,118 @@
 ### Stanford University · Code in Place × Section Leader
 
 <p align="center">
-  <strong>An interactive AI-powered guessing game built with Python.</strong>
+  <strong>An interactive AI-powered animal guessing game built with Python.</strong>
+  <br>
+  <sub>Natural-language questions · Constrained AI responses · Interactive game loop</sub>
 </p>
 
 <p align="center">
   <a href="https://www.python.org/">
     <img src="https://img.shields.io/badge/Python-3.x-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
   </a>
-  <img src="https://img.shields.io/badge/AI-LLM-8B5CF6?style=for-the-badge" alt="AI">
+  <img src="https://img.shields.io/badge/AI-LLM-7C3AED?style=for-the-badge&logo=openai&logoColor=white" alt="AI / LLM">
   <img src="https://img.shields.io/badge/Stanford-Code%20in%20Place-8C1515?style=for-the-badge" alt="Stanford Code in Place">
   <img src="https://img.shields.io/badge/Status-Complete-16A34A?style=for-the-badge" alt="Project Status">
 </p>
 
----
-
-## 🧩 What is this?
-
-**Guess My Animal** is a command-line game that combines fundamental Python programming with an AI model.
-
-The program secretly chooses an animal. Instead of selecting from predefined questions, the player can ask questions in natural language and use the AI's **Yes/No responses** to narrow down the possibilities.
-
-The goal is simple:
-
-> **Can you figure out the animal before you run out of questions? 🐾**
-
-This project was developed as part of **Stanford University's Code in Place × Section Leader** learning experience.
+<p align="center">
+  <a href="#-overview">Overview</a> ·
+  <a href="#-how-it-works">How It Works</a> ·
+  <a href="#-demo">Demo</a> ·
+  <a href="#-technical-design">Technical Design</a> ·
+  <a href="#-run-locally">Run Locally</a>
+</p>
 
 ---
 
-## 🎮 The Experience
+## 🧠 Overview
 
+**Guess My Animal** is a small interactive Python application that combines traditional program control flow with an AI model.
 
-                    🐾 START
-                       │
-                       ▼
-              ┌─────────────────┐
-              │  Random Animal  │
-              │    Selected     │
-              └────────┬────────┘
-                       │
-                       ▼
-              ┌─────────────────┐
-              │ Ask a Question  │
-              │  in Plain Text  │
-              └────────┬────────┘
-                       │
-                       ▼
-              ┌─────────────────┐
-              │    🤖 AI Model  │
-              │ Evaluates Query │
-              └────────┬────────┘
-                       │
-                       ▼
-                 ┌───────────┐
-                 │ YES / NO  │
-                 └─────┬─────┘
-                       │
-                       ▼
-              ┌─────────────────┐
-              │  Make a Guess  │
-              └────────┬────────┘
-                       │
-                ┌──────┴──────┐
-                │             │
-              ❌ Wrong      ✅ Correct
-                │             │
-                ▼             ▼
-             Continue       🎉 WIN
+The program secretly selects an animal. The player then asks questions in natural language and uses the AI's **Yes/No responses** to narrow down the possibilities before making a guess.
+
+The project explores a simple but useful interaction pattern:
+
+> **Deterministic program state + natural-language AI interaction**
+
+The project was developed as part of **Stanford University's Code in Place × Section Leader** learning experience.
 
 ---
 
-## 💬 Example
+## 🎯 The Goal
 
-I am thinking of an animal.
+The game has one simple objective:
+
+```text
+🐾 Discover the hidden animal
+        ↓
+❓ Ask questions
+        ↓
+🤖 Receive constrained AI answers
+        ↓
+🧠 Narrow the possibilities
+        ↓
+🎉 Make the correct guess
+````
+
+The player is not restricted to a predefined list of questions.
+
+Instead, questions can be expressed naturally:
+
+```text
+"Does it have four legs?"
+"Can it fly?"
+"Does it live in water?"
+"Is it larger than a dog?"
+"Does it have fur?"
+```
+
+---
+
+## 🔄 How It Works
+
+```mermaid
+flowchart TD
+    A["🐾 Start Game"] --> B["🎲 Select Hidden Animal"]
+    B --> C["❓ Player Asks Question"]
+    C --> D["🤖 AI Evaluates Question"]
+    D --> E{"Yes / No"}
+    E --> F["🧠 Player Updates Guess"]
+    F --> G{"Correct Animal?"}
+    G -->|No| C
+    G -->|Yes| H["🎉 Game Complete"]
+```
+
+### The interaction loop
+
+**1. 🎲 Select**
+
+A random animal is selected and kept hidden from the player.
+
+**2. ❓ Ask**
+
+The player enters a natural-language question.
+
+**3. 🤖 Evaluate**
+
+The question is provided to the AI together with the relevant hidden-animal context.
+
+**4. ✅ / ❌ Respond**
+
+The AI is instructed to provide a constrained **Yes/No** response without revealing the animal.
+
+**5. 🎯 Guess**
+
+The player continues asking questions until they identify the hidden animal.
+
+---
+
+## 🎬 Demo
+
+### Example gameplay
+
+```text
+🐾 I am thinking of an animal.
 Can you guess what animal it is?
 
 Ask me a yes or no question: Does it have four legs?
@@ -88,170 +127,236 @@ Ask me a yes or no question: Does it bark?
 Yes.
 
 Ask me a yes or no question: Is it a dog?
-Correct!
+Correct! 🎉
+```
 
+### 💭 Natural-language interaction
 
-The interesting part is that the player is **not limited to a fixed question list**.
+The player can ask different types of questions:
 
-Questions can be expressed naturally:
-
-Does it fly?
-Does it have fur?
-Can it swim?
-Is it larger than a dog?
-Does it usually live in forests?
-
+```text
+┌─────────────────────────────────────┐
+│ ❓ Does it have fur?                 │
+│ ❓ Can it swim?                      │
+│ ❓ Does it usually live in forests? │
+│ ❓ Is it larger than a dog?          │
+│ ❓ Can it fly?                       │
+└─────────────────────────────────────┘
+                    ↓
+              🤖 AI Model
+                    ↓
+              ┌───────────┐
+              │ YES / NO  │
+              └───────────┘
+```
 
 ---
 
-## 🧠 How the AI is Used
+## 🧩 Technical Design
 
-The AI is used as a constrained question-answering component.
+The project separates the **game state** from the **AI response layer**.
 
-The game maintains the hidden animal as part of the program state. When the player asks a question, the AI receives the relevant context and is instructed to:
+### Program layer
 
-* evaluate the question against the hidden animal,
+The Python program is responsible for:
+
+```text
+Animal Selection
+      ↓
+Game State
+      ↓
+User Input
+      ↓
+Control Flow
+      ↓
+Guess Evaluation
+      ↓
+Game Termination
+```
+
+### AI layer
+
+The AI is responsible for interpreting natural-language questions:
+
+```text
+Player Question
+      +
+Hidden Animal Context
+      ↓
+   🤖 AI Model
+      ↓
+  Constrained
+  Yes / No
+```
+
+This keeps the core game logic deterministic while using the AI where natural-language interpretation is useful.
+
+---
+
+## 🔐 Constrained AI Behavior
+
+The AI is not used as an unrestricted conversational agent.
+
+The prompt is designed to constrain the model to:
+
+* evaluate whether the player's question is true for the selected animal,
 * respond with **Yes** or **No**,
-* avoid directly revealing the animal.
+* avoid directly revealing the hidden animal.
 
 Conceptually:
 
-Player Question
-      │
-      ▼
-┌──────────────────┐
-│ Hidden Animal    │
-│ + User Question  │
-└────────┬─────────┘
-         │
-         ▼
-    🤖 AI Model
-         │
-         ▼
-   "Yes" / "No"
-         │
-         ▼
-   Player continues
+```text
+┌───────────────────────────┐
+│ Hidden Animal             │
+│        +                  │
+│ Player's Natural Question │
+└─────────────┬─────────────┘
+              ↓
+        ┌────────────┐
+        │  AI Model  │
+        └─────┬──────┘
+              ↓
+       ┌──────────────┐
+       │ Yes / No     │
+       │ Only         │
+       └──────────────┘
+```
 
-This creates a simple hybrid system:
-
-**deterministic program state + natural-language AI interaction**
+This provides a simple example of **constrained model behavior inside a conventional software workflow**.
 
 ---
 
-## 🔍 Core Programming Concepts
+## 🧪 Programming Concepts
 
-Although the game is small, it brings together several fundamental programming ideas:
-
-| Concept         | Application                            |
-| --------------- | -------------------------------------- |
-| `input()`       | Accepting natural-language questions   |
-| Variables       | Maintaining the selected animal        |
-| Functions       | Organizing program behavior            |
-| `while` loop    | Maintaining the interactive game loop  |
-| Conditionals    | Checking guesses and controlling state |
-| String handling | Comparing user input and responses     |
-| AI prompting    | Constraining model behavior            |
+| Concept             | Where It Appears              |
+| ------------------- | ----------------------------- |
+| 🐍 Python           | Core implementation           |
+| 🎲 Random selection | Choosing the hidden animal    |
+| 💬 User input       | Natural-language questions    |
+| 🔄 Loops            | Repeated gameplay             |
+| 🔀 Conditionals     | Guess and game-state logic    |
+| 🧩 Functions        | Program organization          |
+| 🤖 AI / LLM         | Question interpretation       |
+| ✍️ Prompting        | Constraining model responses  |
+| 🎯 State management | Maintaining the hidden target |
 
 ---
 
-## 📁 Project Structure
+## 📂 Project Structure
 
-
+```text
 Guess-My-Animal-StanfordUniversity-CodeinPlace-SectionLeader/
 │
 ├── main.py
 ├── animal.py
 └── README.md
-
+```
 
 ### `main.py`
 
-The main application logic.
+Contains the primary game logic:
 
-It handles:
-
-* selecting the animal,
-* interacting with the player,
-* receiving questions,
-* communicating with the AI,
-* checking the player's guess,
-* controlling the game loop.
+* initializes the game,
+* selects the animal,
+* receives player questions,
+* interacts with the AI,
+* checks guesses,
+* controls the game loop.
 
 ### `animal.py`
 
-Provides the animal-selection functionality used by the game.
+Provides the random animal-selection functionality used by the game.
 
 ---
 
-## ⚙️ Running the Project
+## 🚀 Run Locally
 
 Clone the repository:
 
+```bash
 git clone https://github.com/rahulkiran2222/Guess-My-Animal-StanfordUniversity-CodeinPlace-SectionLeader.git
+```
 
-Move into the project:
+Enter the project directory:
 
-
+```bash
 cd Guess-My-Animal-StanfordUniversity-CodeinPlace-SectionLeader
-
+```
 
 Run the program:
 
-
+```bash
 python main.py
+```
 
-
-> **Note:** The AI functionality relies on the environment and AI interface provided for the Code in Place project. The repository therefore preserves the original learning-project structure rather than introducing an independent API setup.
-
----
-
-## 🧪 Design Perspective
-
-A small design decision in this project is the separation between **game logic** and **AI interaction**.
-
-The Python program remains responsible for:
-
-
-State
- ↓
-Control Flow
- ↓
-User Interaction
- ↓
-Termination
-
-
-while the AI is used for:
-
-
-Natural-language question
-          ↓
-      Interpretation
-          ↓
-       Yes / No
-
-
-This separation keeps the application simple while demonstrating how an AI component can be incorporated into a conventional program.
+> **Note:** The AI interface used by the original Code in Place environment is part of the course/project setup. The repository therefore preserves the original project structure rather than introducing a separate API configuration.
 
 ---
 
-## 🚀 Possible Extensions
+## 🧠 What I Learned
 
-The current implementation intentionally focuses on the core interaction.
+This project provided a practical introduction to combining conventional programming with an AI component.
 
-Natural extensions could include:
+The main lessons were:
 
-* 📊 tracking the number of questions required to solve each game,
-* 🧠 maintaining question history,
-* 🎯 ranking likely animals after each response,
-* 🌳 comparing the AI approach with a decision-tree baseline,
-* 🧪 testing consistency across repeated AI responses,
-* 📈 evaluating how question strategy affects success rate,
-* 🌍 expanding the underlying animal set,
-* 🖥️ building a graphical or web-based interface.
+* designing an interactive program,
+* maintaining program state,
+* working with loops and conditionals,
+* handling natural-language user input,
+* integrating an AI model into a program,
+* writing prompts with explicit behavioral constraints,
+* separating deterministic application logic from model-generated responses.
 
-These extensions would turn the game from a programming exercise into a small **AI evaluation experiment**.
+One of the most useful design ideas was keeping the **game state under program control** while using the AI for a narrower task: interpreting the player's natural-language question.
+
+---
+
+## 🔬 From Game to Experiment
+
+Although this repository is intentionally a small learning project, the underlying interaction suggests several directions for experimentation.
+
+For example:
+
+```text
+             Guess My Animal
+                    │
+        ┌───────────┴───────────┐
+        ↓                       ↓
+   AI-based game          Rule-based game
+        │                       │
+        └───────────┬───────────┘
+                    ↓
+             Compare Results
+                    │
+        ┌───────────┼───────────┐
+        ↓           ↓           ↓
+     Accuracy    Questions   Consistency
+```
+
+Possible experiments could examine:
+
+* the number of questions required to identify an animal,
+* consistency across repeated AI responses,
+* effectiveness of different prompting strategies,
+* AI-based versus rule-based question answering,
+* how question strategy affects successful identification.
+
+These are **possible extensions rather than implemented features** in the current repository.
+
+---
+
+## 🌱 Possible Future Extensions
+
+If the project were expanded, natural next steps would include:
+
+* 📊 Question-count and game statistics
+* 🧠 Question-history tracking
+* 🎯 Candidate-animal ranking
+* 🌳 Decision-tree baseline
+* 🧪 Repeated-trial evaluation
+* 📈 AI consistency analysis
+* 🌍 Larger animal knowledge base
+* 🖥️ Web or graphical interface
 
 ---
 
@@ -259,21 +364,29 @@ These extensions would turn the game from a programming exercise into a small **
 
 **Stanford University — Code in Place × Section Leader**
 
-This project was created as part of a hands-on programming experience focused on learning Python and experimenting with AI-assisted interaction.
+This project was developed as part of a hands-on programming experience focused on Python fundamentals and experimentation with AI-assisted interaction.
 
 It is an **individual learning project** and is not an official Stanford software product.
 
 ---
 
-## 📚 What This Project Represents
+## 📌 Project Scope
 
-This repository is intentionally a small project.
+This repository is intentionally a **small educational project**, not a research benchmark or production AI system.
 
-Its value is not the complexity of the game itself, but the exercise of combining:
+Its purpose is to demonstrate the progression from:
 
-**Python fundamentals → program state → user interaction → constrained AI behavior**
+```text
+Python Fundamentals
+        ↓
+Interactive Programming
+        ↓
+AI Integration
+        ↓
+Constrained AI Behavior
+```
 
-It represents an early practical step toward building and evaluating interactive AI systems.
+The project complements my larger work in AI/ML and independent research, where I focus more deeply on **LLM evaluation, foundation models, multilingual NLP, AI safety, and responsible AI**.
 
 ---
 
@@ -283,20 +396,26 @@ It represents an early practical step toward building and evaluating interactive
 
 **AI/ML Practitioner · Independent Researcher**
 
-Research interests include:
+Research interests:
 
 `LLM Evaluation` · `Foundation Models` · `AI Safety` · `Multilingual NLP` · `Responsible AI`
 
 ---
 
 <p align="center">
-  <br>
   🐾
-  <br>
+  <br><br>
   <strong>Ask better questions. Think like the animal.</strong>
   <br><br>
   Built with Python + AI
-  <br>
+  <br><br>
+  <a href="https://github.com/rahulkiran2222">
+    <img src="https://img.shields.io/badge/GitHub-Rahul%20Kiran%20Gunti-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
+  </a>
 </p>
-```
 
+---
+
+<p align="center">
+  <sub>Part of my journey from programming fundamentals toward building and evaluating intelligent systems.</sub>
+</p>
